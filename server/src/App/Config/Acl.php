@@ -140,12 +140,6 @@ final class Acl
                 'update',
                 'delete',
             ],
-            'EventAdditionalCost' => [
-                'getOne',
-                'create',
-                'update',
-                'delete',
-            ],
             'Invoice' => [
                 'getOnePdf',
             ],
@@ -241,9 +235,6 @@ final class Acl
                 'getOnePdf',
             ],
             'EventTechnician' => [
-                'getOne',
-            ],
-            'EventAdditionalCost' => [
                 'getOne',
             ],
             'Invoice' => [

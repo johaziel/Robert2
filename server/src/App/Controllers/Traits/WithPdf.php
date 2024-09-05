@@ -14,7 +14,6 @@ trait WithPdf
 
     public function getOnePdf(Request $request, Response $response): ResponseInterface
     {
-        //file_put_contents('var_dump.txt',var_export($request, true));
         $id = $request->getIntegerAttribute('id');
         $model = $this->getModelClass()::findOrFail($id);
 
@@ -28,6 +27,5 @@ trait WithPdf
         }
 
         return $pdf->asResponse($response);
-        
     }
 }

@@ -460,12 +460,6 @@ final class Event extends BaseModel implements Serializable, PeriodInterface, Bo
             ->orderBy('start_date');
     }
 
-    public function additional_costs()
-    {
-        return $this->hasMany(EventAdditionalCost::class, 'event_id')
-            ->orderBy('id');
-    }
-
     public function beneficiaries()
     {
         return $this->belongsToMany(Beneficiary::class, 'event_beneficiaries')
@@ -567,11 +561,6 @@ final class Event extends BaseModel implements Serializable, PeriodInterface, Bo
     public function getTechniciansAttribute()
     {
         return $this->getRelationValue('technicians');
-    }
-
-    public function getAdditionalCostsAttribute()
-    {
-        return $this->getRelationValue('additional_costs');
     }
 
     public function getMaterialsAttribute()
@@ -1148,29 +1137,6 @@ final class Event extends BaseModel implements Serializable, PeriodInterface, Bo
     {
         $this->beneficiaries()->sync($beneficiariesIds);
         return $this->refresh();
-    }
-
-    public function syncAdditionalCosts(array $additionalCostsData): static
-    {
-        $additionalCosts = new CoreCollection(array_map(
-            fn ($additionalCostData) => (
-                new EventAdditionalCost([
-                    'event_id' => $this->id,
-                    'name' => $additionalCostData['name'],
-                    'description' => $additionalCostData['description'],
-                    'cost_price' => $additionalCostData['cost_price'],
-                ])
-            ),
-            $additionalCostsData,
-        ));
-
-        return dbTransaction(function () use ($additionalCosts) {
-            EventAdditionalCost::flushForEvent($this->id);
-
-            $this->additional_costs()->saveMany($additionalCosts);
-            return $this->refresh();
-        });
-
     }
 
     public function syncTechnicians(array $techniciansData): static
@@ -2006,12 +1972,6 @@ final class Event extends BaseModel implements Serializable, PeriodInterface, Bo
             $event->syncTechnicians($technicians);
         }
 
-        // - Cout additional.
-        if (isset($data['additional_costs'])) {
-            Assert::isArray($data['additional_costs'], "Key `additional_costs` must be an array.");
-            $event->syncAdditionalCosts($data['additional_costs']);
-        }
-
         // - Matériels.
         if (isset($data['materials'])) {
             Assert::isArray($data['materials'], "Key `materials` must be an array.");
@@ -2038,7 +1998,6 @@ final class Event extends BaseModel implements Serializable, PeriodInterface, Bo
                     $event->append([
                         'beneficiaries',
                         'technicians',
-                        'additional_costs',
                         'has_not_returned_materials',
                         'total_replacement',
                         'currency',

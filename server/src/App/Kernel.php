@@ -145,6 +145,5 @@ final class Kernel
         Models\Park::observe(Observers\ParkObserver::class);
         Models\Technician::observe(Observers\TechnicianObserver::class);
         Models\User::observe(Observers\UserObserver::class);
-        Models\EventAdditionalCost::observe(Observers\EventAdditionalCostObserver::class);
     }
 }

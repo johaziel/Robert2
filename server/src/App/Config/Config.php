@@ -30,7 +30,7 @@ final class Config
         'baseUrl' => null,
         'apiHeaders' => ['Accept' => 'application/json'],
         'enableCORS' => false,
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => false,
         'useRouterCache' => true,
         'JWTSecret' => 'super_secret_key_you_should_not_commit',
         'httpAuthHeader' => 'Authorization',
@@ -102,11 +102,8 @@ final class Config
         ],
         'logger' => [
             'timezone' => 'Europe/Paris',
-            //'level' => LogLevel::Notice,
-            //'max_files' => 10,
-            'name' => 'app',
-            'path' => __DIR__ . '/../logs/app.log',
-            'level' => \Monolog\Logger::DEBUG,
+            'level' => LogLevel::Notice,
+            'max_files' => 10,
         ],
         'maxFileUploadSize' => 25 * 1024 * 1024, // - En octets
         'authorizedFileTypes' => [

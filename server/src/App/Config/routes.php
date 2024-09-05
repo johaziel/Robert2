@@ -26,10 +26,6 @@ return [
         '/technicians/while-event/{eventId:[0-9]+}[/]' => 'TechnicianController:getAllWhileEvent',
         '/technicians/{id:[0-9]+}[/]' => 'TechnicianController:getOne',
 
-        //'/additional-costs[/]' => 'AdditionalCostController:getAll',
-        //'/additional-costs/while-event/{eventId:[0-9]+}[/]' => 'AdditionalCostController:getAllWhileEvent',
-        //'/additional-costs/{id:[0-9]+}[/]' => 'AdditionalCostController:getOne',
-
         '/beneficiaries[/]' => 'BeneficiaryController:getAll',
         '/beneficiaries/{id:[0-9]+}[/]' => 'BeneficiaryController:getOne',
         '/beneficiaries/{id:[0-9]+}/bookings[/]' => 'BeneficiaryController:getBookings',
@@ -58,9 +54,6 @@ return [
         '/events/{id:[0-9]+}[/]' => 'EventController:getOne',
         '/events/{id:[0-9]+}/missing-materials[/]' => 'EventController:getMissingMaterials',
         '/events/{id:[0-9]+}/documents[/]' => 'EventController:getDocuments',
-
-        //--------
-        '/event-additional-costs/{id:[0-9]+}[/]' => 'EventAdditionalCostController:getOne',
 
         '/event-technicians/{id:[0-9]+}[/]' => 'EventTechnicianController:getOne',
 
@@ -104,8 +97,6 @@ return [
         '/events/{id:[0-9]+}/documents[/]' => 'EventController:attachDocument',
 
         '/event-technicians[/]' => 'EventTechnicianController:create',
-        //----------------------
-        '/event-additional-costs[/]' => 'EventAdditionalCostController:create',
     ],
     'put' => [
         '/users/{id:(?:[0-9]+|self)}[/]' => 'UserController:update',
@@ -149,8 +140,6 @@ return [
 
         '/event-technicians/{id:[0-9]+}[/]' => 'EventTechnicianController:update',
 
-        '/event-additional-costs/{id:[0-9]+}[/]' => 'EventAdditionalCostController:update',
-
         '/settings[/]' => 'SettingController:update',
 
         sprintf(
@@ -164,16 +153,12 @@ return [
         '/subcategories/{id:[0-9]+}[/]' => 'SubCategoryController:delete',
         '/tags/{id:[0-9]+}[/]' => 'TagController:delete',
         '/technicians/{id:[0-9]+}[/]' => 'TechnicianController:delete',
-        //'/additional-costs/{id:[0-9]+}[/]' => 'AdditionalCostController:delete',
         '/beneficiaries/{id:[0-9]+}[/]' => 'BeneficiaryController:delete',
         '/companies/{id:[0-9]+}[/]' => 'CompanyController:delete',
         '/parks/{id:[0-9]+}[/]' => 'ParkController:delete',
         '/materials/{id:[0-9]+}[/]' => 'MaterialController:delete',
         '/attributes/{id:[0-9]+}[/]' => 'AttributeController:delete',
         '/event-technicians/{id:[0-9]+}[/]' => 'EventTechnicianController:delete',
-        //-------------
-        '/event-additional-costs/{id:[0-9]+}[/]' => 'EventAdditionalCostController:softDelete',
-
         '/documents/{id:[0-9]+}[/]' => 'DocumentController:delete',
         '/estimates/{id:[0-9]+}[/]' => 'EstimateController:delete',
         '/settings/{key:[a-zA-Z0-9-.]+}[/]' => 'SettingController:reset',
