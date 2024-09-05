@@ -8,9 +8,7 @@ import { TechnicianSchema } from './technicians';
 import { withCountedEnvelope } from './@schema';
 import { EstimateSchema } from './estimates';
 import { InvoiceSchema } from './invoices';
-import {
-    BeneficiarySchema,
-} from './beneficiaries';
+import { BeneficiarySchema } from './beneficiaries';
 
 import type Period from '@/utils/period';
 import type { CountedData } from './@types';
@@ -41,6 +39,14 @@ export const EventTechnicianSchema = z.strictObject({
     period: z.period(),
     position: z.string().nullable(),
     technician: z.lazy(() => TechnicianSchema),
+});
+
+export const EventAdditionalCostSchema = z.strictObject({
+    id: z.number(),
+    event_id: z.number(),
+    name: z.string(),
+    description: z.string(),
+    cost_price: z.string(),
 });
 
 //
@@ -108,6 +114,7 @@ export const createEventDetailsSchema = <T extends ZodRawShape>(augmentation: T)
             currency: z.string(),
             beneficiaries: z.lazy(() => BeneficiarySchema.array()),
             technicians: z.lazy(() => EventTechnicianSchema.array()),
+            additionalCosts: z.lazy(() => EventAdditionalCostSchema.array()),
             materials: z.lazy(() => EventMaterialSchema.array()),
             note: z.string().nullable(),
             author: z.lazy(() => UserSchema).nullable(),
@@ -207,6 +214,7 @@ export type EventMaterialWithQuantityMissing = SchemaInfer<typeof EventMaterialW
 
 export type EventTechnician = SchemaInfer<typeof EventTechnicianSchema>;
 
+export type EventAdditionalCost = SchemaInfer<typeof EventAdditionalCostSchema>;
 //
 // - Edition
 //
@@ -247,6 +255,12 @@ type EventDepartureInventory = EventDepartureInventoryMaterial[];
 export type EventTechnicianEdit = {
     period: Period | null,
     position: string | null,
+};
+
+export type EventAdditionalCostEdit = {
+    name: string | null,
+    description: string | null,
+    cost_price: string,
 };
 
 //
@@ -371,6 +385,35 @@ const deleteTechnicianAssignment = async (eventTechnicianId: EventTechnician['id
     await requester.delete(`/event-technicians/${eventTechnicianId}`);
 };
 
+const getAdditionalCost = async (eventAdditionalCostId: EventAdditionalCost['id']): Promise<EventAdditionalCost> => {
+    const response = await requester.get(`/event-additional-costs/${eventAdditionalCostId}`);
+    return EventAdditionalCostSchema.parse(response.data);
+};
+ 
+const addAdditionalCost = async (
+    eventId: Event['id'],
+    name: EventAdditionalCost['name'],
+    description: EventAdditionalCost['description'],
+    cost_price: EventAdditionalCost['cost_price'],
+    data: EventAdditionalCostEdit,
+): Promise<EventAdditionalCost> => {
+    const payload = { ...data, event_id: eventId, name: name,description: description, cost_price: cost_price  };
+    const response = await requester.post(`/event-additional-costs`, payload);
+    return EventAdditionalCostSchema.parse(response.data);
+};
+
+const updateAdditionalCost = async (
+    eventAdditionalCostId: EventAdditionalCost['id'],
+    data: Partial<EventAdditionalCostEdit>,
+): Promise<EventAdditionalCost> => {
+    const response = await requester.put(`/event-additional-costs/${eventAdditionalCostId}`, data);
+    return EventAdditionalCostSchema.parse(response.data);
+};
+
+const deleteAdditionalCost = async (eventAdditionalCostId: EventAdditionalCost['id']): Promise<void> => {
+    await requester.delete(`/event-additional-costs/${eventAdditionalCostId}`);
+};
+
 const duplicate = async (id: Event['id'], data: EventDuplicatePayload): Promise<EventDetails> => {
     const response = await requester.post(`/events/${id}/duplicate`, data);
     return EventDetailsSchema.parse(response.data);
@@ -413,6 +456,10 @@ export default {
     addTechnicianAssignment,
     updateTechnicianAssignment,
     deleteTechnicianAssignment,
+    getAdditionalCost,
+    addAdditionalCost,
+    updateAdditionalCost,
+    deleteAdditionalCost,
     remove,
     documents,
     attachDocument,
